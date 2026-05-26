@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>ANU LIVE NUMBER PANEL</title>
+
+<style>
+
+:root{
+  --bg:#070A13;
+  --bg2:#0B1530;
+
+  --border:rgba(255,255,255,.14);
+
+  --text:#EEF3FF;
+  --muted:#A7B3D1;
+
+  --blue1:#4F8CFF;
+  --blue2:#2563EB;
+
+  --green1:#22c55e;
+  --green2:#16a34a;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+/* FULL SCREEN FIX */
+
+html,
+body{
+  width:100%;
+  height:100%;
+  overflow-x:hidden;
+}
+
+body{
+
+  background:linear-gradient(
+    135deg,
+    var(--bg),
+    var(--bg2)
+  );
+
+  font-family:sans-serif;
+
+  color:var(--text);
+
+  padding:0; /* REMOVE SIDE GAP */
+}
+
+/* FULL WIDTH */
+
+.card{
+
+  width:100vw;
+
+  min-height:100vh;
+
+  border-radius:0;
+
+  background:rgba(255,255,255,.06);
+
+  padding:10px;
+
+  box-shadow:none;
+}
+
+/* TOP */
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  margin-bottom:10px;
+
+  gap:8px;
+}
+
+.title{
+  font-size:18px;
+  font-weight:900;
+}
+
+.sub{
+  color:var(--muted);
+  font-size:11px;
+}
+
+.badge{
+  border:1px solid var(--border);
+
+  border-radius:999px;
+
+  padding:5px 10px;
+
+  font-size:10px;
+
+  white-space:nowrap;
+}
+
+/* PANEL */
+
+.panel{
+
+  width:100%;
+
+  background:rgba(0,0,0,.22);
+
+  border:1px solid var(--border);
+
+  border-radius:14px;
+
+  padding:10px;
+}
+
+/* SERVICES */
+
+.servicesWrap{
+  overflow-x:auto;
+
+  margin-bottom:10px;
+
+  scrollbar-width:none;
+}
+
+.servicesWrap::-webkit-scrollbar{
+  display:none;
+}
+
+.services{
+  display:flex;
+  gap:7px;
+  width:max-content;
+}
+
+.service{
+
+  border-radius:10px;
+
+  padding:7px 10px;
+
+  font-size:11px;
+
+  font-weight:900;
+
+  cursor:pointer;
+
+  white-space:nowrap;
+
+  border:1px solid rgba(255,255,255,.08);
+
+  background:#111827;
+}
+
+.service.hasNumbers{
+
+  background:linear-gradient(
+    135deg,
+    var(--green1),
+    var(--green2)
+  );
+}
+
+.service.active{
+
+  background:linear-gradient(
+    135deg,
+    var(--blue1),
+    var(--blue2)
+  ) !important;
+}
+
+/* INFO */
+
+.info{
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:7px;
+
+  margin-bottom:10px;
+}
+
+.box{
+
+  border:1px solid var(--border);
+
+  border-radius:10px;
+
+  padding:8px;
+}
+
+.label{
+  color:var(--muted);
+  font-size:9px;
+}
+
+.value{
+  font-size:18px;
+  font-weight:900;
+}
+
+/* BUTTON */
+
+.getBtn{
+
+  width:100%;
+
+  border:none;
+
+  border-radius:10px;
+
+  padding:11px;
+
+  font-size:14px;
+
+  font-weight:900;
+
+  cursor:pointer;
+
+  color:#fff;
+
+  margin-bottom:8px;
+
+  background:linear-gradient(
+    135deg,
+    var(--blue1),
+    var(--blue2)
+  );
+}
+
+/* LIVE */
+
+.live{
+  display:grid;
+  gap:4px;
+}
+
+/* ULTRA COMPACT BOX */
+
+.nbox{
+
+  height:34px;
+
+  border:1px solid var(--border);
+
+  border-radius:8px;
+
+  padding:4px 6px;
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  background:rgba(255,255,255,.03);
+}
+
+.num{
+
+  flex:1;
+
+  font-size:11px;
+
+  font-weight:900;
+
+  overflow:hidden;
+
+  white-space:nowrap;
+
+  text-overflow:ellipsis;
+}
+
+.copyBtn{
+
+  border:none;
+
+  border-radius:5px;
+
+  padding:3px 7px;
+
+  font-size:9px;
+
+  font-weight:900;
+
+  cursor:pointer;
+
+  color:#fff;
+
+  background:linear-gradient(
+    135deg,
+    var(--green1),
+    var(--green2)
+  );
+}
+
+/* COPY ALL */
+
+.copyAllBtn{
+
+  width:100%;
+
+  border:none;
+
+  border-radius:10px;
+
+  padding:9px;
+
+  font-size:12px;
+
+  font-weight:900;
+
+  cursor:pointer;
+
+  margin-top:6px;
+
+  color:#fff;
+
+  background:linear-gradient(
+    135deg,
+    #7c3aed,
+    #9333ea
+  );
+}
+
+/* WEBVIEW FULL */
+
+.webviewBox{
+
+  margin-top:12px;
+
+  width:100%;
+
+  height:850px;
+
+  border:1px solid var(--border);
+
+  border-radius:12px;
+
+  overflow:hidden;
+}
+
+.webviewBox iframe{
+
+  width:100%;
+
+  height:100%;
+
+  border:none;
+}
+
+/* TOAST */
+
+.toast{
+
+  position:fixed;
+
+  top:12px;
+
+  left:50%;
+
+  transform:translateX(-50%);
+
+  background:rgba(0,0,0,.82);
+
+  border:1px solid var(--border);
+
+  border-radius:10px;
+
+  padding:8px 12px;
+
+  opacity:0;
+
+  transition:.18s;
+
+  font-weight:900;
+
+  z-index:999;
+
+  font-size:12px;
+}
+
+.toast.show{
+  opacity:1;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="card">
+
+<div class="top">
+
+<div>
+
+<div class="title">
+ANU PANEL
+</div>
+
+<div class="sub">
+Created By Tamim
+</div>
+
+</div>
+
+<div class="badge">
+🖥️ TAMIM ANU 🇧🇩
+</div>
+
+</div>
+
+<div class="panel">
+
+<!-- SERVICES -->
+
+<div class="servicesWrap">
+
+<div class="services"
+id="services"></div>
+
+</div>
+
+<!-- INFO -->
+
+<div class="info">
+
+<div class="box">
+
+<div class="label">
+RANGE TOTAL NUMBER
+</div>
+
+<div class="value"
+id="rangeTotal">
+0
+</div>
+
+</div>
+
+<div class="box">
+
+<div class="label">
+PANEL TOTAL NUMBER
+</div>
+
+<div class="value"
+id="panelTotal">
+0
+</div>
+
+</div>
+
+</div>
+
+<!-- GET -->
+
+<button class="getBtn"
+id="getBtn">
+
+╰┈➤ GET NUMBER 💻✌︎㋡
+
+</button>
+
+<!-- LIVE -->
+
+<div class="live"
+id="live"></div>
+
+<!-- COPY ALL -->
+
+<button class="copyAllBtn"
+id="copyAllBtn">
+
+📋 COPY 5 ALL NUMBER + CLEAR 🗑
+
+</button>
+
+<!-- WEBVIEW -->
+
+<div class="webviewBox">
+
+<iframe
+src="https://anu-live-search.onrender.com/">
+</iframe>
+
+</div>
+
+</div>
+</div>
+
+<script>
+
+const URL="https://script.google.com/macros/s/AKfycbxs5UnBzGbXDsbX_I027WP7RVdGrKBuKZpYGGPEee3l6lkr670YDne_A-cwdznjFeWMhg/exec";
+
+const SERVICES=[
+
+"rangeid01",
+"rangeid02",
+"rangeid03",
+"rangeid04",
+"rangeid05",
+
+"rangeid06",
+"rangeid07",
+"rangeid08",
+"rangeid09",
+"rangeid10"
+
+];
+
+const servicesEl=
+document.getElementById("services");
+
+const rangeTotalEl=
+document.getElementById("rangeTotal");
+
+const panelTotalEl=
+document.getElementById("panelTotal");
+
+const liveEl=
+document.getElementById("live");
+
+let slots=[
+
+{num:"",active:false},
+{num:"",active:false},
+{num:"",active:false},
+{num:"",active:false},
+{num:"",active:false}
+
+];
+
+/* SERVICE */
+
+function getService(){
+
+return localStorage
+.getItem("service")
+|| "rangeid01";
+
+}
+
+function setService(v){
+
+localStorage
+.setItem("service",v);
+
+document
+.querySelectorAll(".service")
+.forEach(s=>{
+
+s.classList.remove("active");
+
+});
+
+const btn=document.querySelector(
+
+`[data-service="${v}"]`
+
+);
+
+if(btn){
+
+btn.classList.add("active");
+
+}
+
+}
+
+/* RENDER */
+
+function renderServices(){
+
+servicesEl.innerHTML="";
+
+SERVICES.forEach((s,i)=>{
+
+servicesEl.innerHTML+=`
+
+<div
+class="service"
+data-service="${s}">
+
+Range ${(i+1)
+.toString()
+.padStart(2,"0")}
+
+</div>
+
+`;
+
+});
+
+document
+.querySelectorAll(".service")
+.forEach(btn=>{
+
+btn.onclick=()=>{
+
+setService(
+btn.dataset.service
+);
+
+loadTotals();
+
+updateServiceLights();
+
+};
+
+});
+
+setService(
+getService()
+);
+
+}
+
+/* LIGHTS */
+
+async function updateServiceLights(){
+
+SERVICES.forEach(async s=>{
+
+try{
+
+const r=await fetch(
+
+URL+
+"?action=total&service="+s
+
+);
+
+const d=await r.json();
+
+const btn=document.querySelector(
+
+`[data-service="${s}"]`
+
+);
+
+if(!btn) return;
+
+btn.classList.remove(
+"hasNumbers"
+);
+
+if(
+Number(d.total)>0 &&
+s!==getService()
+){
+
+btn.classList.add(
+"hasNumbers"
+);
+
+}
+
+}catch{}
+
+});
+
+}
+
+/* BOX */
+
+function renderBoxes(){
+
+liveEl.innerHTML="";
+
+slots.forEach((slot,index)=>{
+
+liveEl.innerHTML+=`
+
+<div class="nbox">
+
+<div class="num">
+
+${slot.num}
+
+</div>
+
+${slot.active ? `
+
+<button
+class="copyBtn"
+onclick="copySlot(${index})">
+
+COPY
+
+</button>
+
+` : ``}
+
+</div>
+
+`;
+
+});
+
+}
+
+/* TOTAL */
+
+async function loadTotals(){
+
+try{
+
+const [r1,r2]=await Promise.all([
+
+fetch(
+URL+
+"?action=total&service="+
+getService()
+),
+
+fetch(
+URL+
+"?action=alltotal"
+)
+
+]);
+
+const d1=await r1.json();
+
+const d2=await r2.json();
+
+rangeTotalEl.textContent=
+d1.total || 0;
+
+panelTotalEl.textContent=
+d2.total || 0;
+
+}catch{}
+
+}
+
+/* GET */
+
+async function getNumbers(){
+
+let empty=
+slots.filter(
+s=>!s.active
+).length;
+
+if(empty===0){
+
+showToast("Full");
+
+return;
+
+}
+
+const r=await fetch(
+
+URL+
+"?action=get"+
+"&service="+
+getService()+
+"&need="+
+empty
+
+);
+
+const d=await r.json();
+
+(d.numbers || [])
+.forEach(num=>{
+
+let slot=
+slots.find(
+s=>!s.active
+);
+
+if(slot){
+
+slot.num=num;
+
+slot.active=true;
+
+}
+
+});
+
+renderBoxes();
+
+loadTotals();
+
+updateServiceLights();
+
+}
+
+/* COPY */
+
+async function copySlot(i){
+
+await navigator
+.clipboard
+.writeText(
+slots[i].num
+);
+
+slots[i]={
+
+num:"",
+active:false
+
+};
+
+renderBoxes();
+
+loadTotals();
+
+updateServiceLights();
+
+showToast("Copied");
+
+}
+
+/* COPY ALL */
+
+document
+.getElementById("copyAllBtn")
+.onclick=async()=>{
+
+let all=slots
+.filter(s=>s.num)
+.map(s=>s.num)
+.join("\n");
+
+if(!all){
+
+showToast("Empty");
+
+return;
+
+}
+
+await navigator
+.clipboard
+.writeText(all);
+
+slots=[
+
+{num:"",active:false},
+{num:"",active:false},
+{num:"",active:false},
+{num:"",active:false},
+{num:"",active:false}
+
+];
+
+renderBoxes();
+
+loadTotals();
+
+updateServiceLights();
+
+showToast("All Copied");
+
+};
+
+/* TOAST */
+
+function showToast(t){
+
+const toast=
+document.getElementById("toast");
+
+toast.textContent=t;
+
+toast.classList.add("show");
+
+setTimeout(()=>{
+
+toast.classList.remove("show");
+
+},2000);
+
+}
+
+/* INIT */
+
+document
+.getElementById("getBtn")
+.onclick=getNumbers;
+
+renderServices();
+
+renderBoxes();
+
+loadTotals();
+
+updateServiceLights();
+
+</script>
+
+</body>
+</html>
