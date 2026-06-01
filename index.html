@@ -2,13 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0">
 
 <title>ANU LIVE NUMBER PANEL</title>
 
 <style>
 
 :root{
+
   --bg:#070A13;
   --bg2:#0B1530;
 
@@ -30,12 +33,12 @@
   box-sizing:border-box;
 }
 
-/* FULL SCREEN FIX */
-
 html,
 body{
+
   width:100%;
   height:100%;
+
   overflow-x:hidden;
 }
 
@@ -51,10 +54,10 @@ body{
 
   color:var(--text);
 
-  padding:0; /* REMOVE SIDE GAP */
+  padding:0;
 }
 
-/* FULL WIDTH */
+/* FULL SCREEN */
 
 .card{
 
@@ -62,20 +65,19 @@ body{
 
   min-height:100vh;
 
-  border-radius:0;
-
   background:rgba(255,255,255,.06);
 
   padding:10px;
-
-  box-shadow:none;
 }
 
 /* TOP */
 
 .top{
+
   display:flex;
+
   justify-content:space-between;
+
   align-items:center;
 
   margin-bottom:10px;
@@ -84,16 +86,21 @@ body{
 }
 
 .title{
+
   font-size:18px;
+
   font-weight:900;
 }
 
 .sub{
+
   color:var(--muted);
+
   font-size:11px;
 }
 
 .badge{
+
   border:1px solid var(--border);
 
   border-radius:999px;
@@ -101,8 +108,6 @@ body{
   padding:5px 10px;
 
   font-size:10px;
-
-  white-space:nowrap;
 }
 
 /* PANEL */
@@ -123,6 +128,7 @@ body{
 /* SERVICES */
 
 .servicesWrap{
+
   overflow-x:auto;
 
   margin-bottom:10px;
@@ -135,8 +141,11 @@ body{
 }
 
 .services{
+
   display:flex;
+
   gap:7px;
+
   width:max-content;
 }
 
@@ -180,6 +189,7 @@ body{
 /* INFO */
 
 .info{
+
   display:grid;
 
   grid-template-columns:1fr 1fr;
@@ -199,12 +209,16 @@ body{
 }
 
 .label{
+
   color:var(--muted);
+
   font-size:9px;
 }
 
 .value{
+
   font-size:18px;
+
   font-weight:900;
 }
 
@@ -240,11 +254,11 @@ body{
 /* LIVE */
 
 .live{
+
   display:grid;
+
   gap:4px;
 }
-
-/* ULTRA COMPACT BOX */
 
 .nbox{
 
@@ -332,7 +346,7 @@ body{
   );
 }
 
-/* WEBVIEW FULL */
+/* WEBVIEW */
 
 .webviewBox{
 
@@ -358,25 +372,27 @@ body{
   border:none;
 }
 
-/* TOAST */
+/* BIG TOAST */
 
 .toast{
 
   position:fixed;
 
-  top:12px;
+  top:10px;
 
   left:50%;
 
   transform:translateX(-50%);
 
-  background:rgba(0,0,0,.82);
+  width:96%;
 
-  border:1px solid var(--border);
+  background:rgba(0,0,0,.92);
 
-  border-radius:10px;
+  border:1px solid rgba(255,255,255,.15);
 
-  padding:8px 12px;
+  border-radius:12px;
+
+  padding:14px 12px;
 
   opacity:0;
 
@@ -386,7 +402,15 @@ body{
 
   z-index:999;
 
-  font-size:12px;
+  font-size:15px;
+
+  line-height:1.6;
+
+  text-align:center;
+
+  word-break:break-word;
+
+  overflow-wrap:break-word;
 }
 
 .toast.show{
@@ -398,7 +422,8 @@ body{
 
 <body>
 
-<div class="toast" id="toast"></div>
+<div class="toast"
+id="toast"></div>
 
 <div class="card">
 
@@ -493,7 +518,9 @@ id="copyAllBtn">
 <div class="webviewBox">
 
 <iframe
-src="https://anu-live-search.onrender.com/">
+id="anuFrame"
+src="https://anu-live-search.onrender.com/"
+allow="clipboard-read; clipboard-write">
 </iframe>
 
 </div>
@@ -521,6 +548,10 @@ const SERVICES=[
 
 ];
 
+const WAIT_TIME=60000;
+
+let lastGetTime=0;
+
 const servicesEl=
 document.getElementById("services");
 
@@ -533,15 +564,60 @@ document.getElementById("panelTotal");
 const liveEl=
 document.getElementById("live");
 
+const toast=
+document.getElementById("toast");
+
 let slots=[
 
-{num:"",active:false},
-{num:"",active:false},
 {num:"",active:false},
 {num:"",active:false},
 {num:"",active:false}
 
 ];
+
+/* TOAST */
+
+function showToast(t,duration=3000){
+
+toast.textContent=t;
+
+toast.classList.add("show");
+
+clearTimeout(window.toastTimer);
+
+window.toastTimer=setTimeout(()=>{
+
+toast.classList.remove("show");
+
+},duration);
+
+}
+
+/* IFRAME COPY */
+
+window.addEventListener("message",async(e)=>{
+
+try{
+
+if(e.data.type==="copy"){
+
+await navigator
+.clipboard
+.writeText(
+e.data.text
+);
+
+showToast("Copied");
+
+}
+
+}catch{
+
+showToast("Copy Failed");
+
+}
+
+});
 
 /* SERVICE */
 
@@ -628,7 +704,7 @@ getService()
 
 }
 
-/* LIGHTS */
+/* LIGHT */
 
 async function updateServiceLights(){
 
@@ -751,18 +827,23 @@ d2.total || 0;
 
 async function getNumbers(){
 
-let empty=
-slots.filter(
-s=>!s.active
-).length;
+const now=Date.now();
 
-if(empty===0){
+if(now-lastGetTime<WAIT_TIME){
 
-showToast("Full");
+showToast(
+
+"বস, আপনার কী খুব ক্ষুধা পেয়েছে নাকি? 😒 নাম্বার না খেয়ে খাবার খান। মাত্র যে ৩টা নাম্বার নিলেন, সেগুলা কি আত্মহত্যা করেছে? 🤦‍♂️ না মানে যেভাবে নাম্বার খাওয়া শুরু করেছেন, মনে হচ্ছে আমি নাম্বার না… এক প্লেট কাচ্চি বিরিয়ানি! 😬🍗😂",
+
+30000
+
+);
 
 return;
 
 }
+
+try{
 
 const r=await fetch(
 
@@ -770,36 +851,59 @@ URL+
 "?action=get"+
 "&service="+
 getService()+
-"&need="+
-empty
+"&need=3"
 
 );
 
 const d=await r.json();
 
-(d.numbers || [])
-.forEach(num=>{
+const nums=d.numbers || [];
 
-let slot=
-slots.find(
-s=>!s.active
-);
+if(nums.length===0){
 
-if(slot){
+showToast("NO NUMBER FOUND");
 
-slot.num=num;
-
-slot.active=true;
+return;
 
 }
 
+/* RESET */
+
+slots=[
+
+{num:"",active:false},
+{num:"",active:false},
+{num:"",active:false}
+
+];
+
+/* ADD */
+
+nums.slice(0,3)
+.forEach((num,i)=>{
+
+slots[i]={
+
+num:num,
+active:true
+
+};
+
 });
+
+lastGetTime=Date.now();
 
 renderBoxes();
 
 loadTotals();
 
 updateServiceLights();
+
+}catch{
+
+showToast("ERROR");
+
+}
 
 }
 
@@ -822,11 +926,7 @@ active:false
 
 renderBoxes();
 
-loadTotals();
-
-updateServiceLights();
-
-showToast("Copied");
+showToast("COPIED");
 
 }
 
@@ -843,7 +943,7 @@ let all=slots
 
 if(!all){
 
-showToast("Empty");
+showToast("EMPTY");
 
 return;
 
@@ -857,40 +957,15 @@ slots=[
 
 {num:"",active:false},
 {num:"",active:false},
-{num:"",active:false},
-{num:"",active:false},
 {num:"",active:false}
 
 ];
 
 renderBoxes();
 
-loadTotals();
-
-updateServiceLights();
-
-showToast("All Copied");
+showToast("ALL COPIED & CLEARED");
 
 };
-
-/* TOAST */
-
-function showToast(t){
-
-const toast=
-document.getElementById("toast");
-
-toast.textContent=t;
-
-toast.classList.add("show");
-
-setTimeout(()=>{
-
-toast.classList.remove("show");
-
-},2000);
-
-}
 
 /* INIT */
 
