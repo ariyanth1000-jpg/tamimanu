@@ -2,29 +2,29 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width,initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>ANU LIVE NUMBER PANEL</title>
 
 <style>
 
 :root{
+  --bg:#050810;
+  --bg2:#0a1230;
 
-  --bg:#070A13;
-  --bg2:#0B1530;
-
-  --border:rgba(255,255,255,.14);
+  --border:rgba(255,255,255,.1);
+  --border2:rgba(255,255,255,.06);
 
   --text:#EEF3FF;
-  --muted:#A7B3D1;
+  --muted:#8B9BC7;
 
   --blue1:#4F8CFF;
   --blue2:#2563EB;
 
   --green1:#22c55e;
   --green2:#16a34a;
+
+  --purple1:#a855f7;
+  --purple2:#7c3aed;
 }
 
 *{
@@ -33,388 +33,320 @@ content="width=device-width,initial-scale=1.0">
   box-sizing:border-box;
 }
 
-html,
-body{
-
+html,body{
   width:100%;
   height:100%;
-
   overflow-x:hidden;
 }
 
 body{
-
-  background:linear-gradient(
-    135deg,
-    var(--bg),
-    var(--bg2)
-  );
-
-  font-family:sans-serif;
-
+  background:
+    radial-gradient(ellipse at top left, rgba(79,140,255,.18), transparent 55%),
+    radial-gradient(ellipse at bottom right, rgba(168,85,247,.15), transparent 55%),
+    linear-gradient(135deg, var(--bg), var(--bg2));
+  background-attachment:fixed;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text);
-
   padding:0;
+  -webkit-font-smoothing:antialiased;
 }
 
 /* FULL SCREEN */
 
 .card{
-
   width:100vw;
-
   min-height:100vh;
-
-  background:rgba(255,255,255,.06);
-
-  padding:10px;
+  padding:14px;
 }
 
 /* TOP */
 
 .top{
-
   display:flex;
-
   justify-content:space-between;
-
   align-items:center;
-
-  margin-bottom:10px;
-
+  margin-bottom:14px;
   gap:8px;
+  padding:0 4px;
 }
 
 .title{
-
-  font-size:18px;
-
+  font-size:20px;
   font-weight:900;
+  letter-spacing:.5px;
+  background:linear-gradient(135deg,#fff,#93c5fd);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
 }
 
 .sub{
-
   color:var(--muted);
-
   font-size:11px;
+  margin-top:2px;
+  font-weight:600;
 }
 
 .badge{
-
   border:1px solid var(--border);
-
+  background:rgba(255,255,255,.04);
+  backdrop-filter:blur(10px);
   border-radius:999px;
-
-  padding:5px 10px;
-
+  padding:6px 12px;
   font-size:10px;
+  font-weight:700;
+  white-space:nowrap;
 }
 
 /* PANEL */
 
 .panel{
-
   width:100%;
-
-  background:rgba(0,0,0,.22);
-
+  background:rgba(255,255,255,.035);
   border:1px solid var(--border);
-
-  border-radius:14px;
-
-  padding:10px;
+  border-radius:18px;
+  padding:14px;
+  backdrop-filter:blur(20px);
+  box-shadow:
+    0 8px 40px rgba(0,0,0,.4),
+    inset 0 1px 0 rgba(255,255,255,.06);
 }
 
-/* SERVICES */
+/* RANGE HERO (split box) */
 
-.servicesWrap{
-
-  overflow-x:auto;
-
-  margin-bottom:10px;
-
-  scrollbar-width:none;
-}
-
-.servicesWrap::-webkit-scrollbar{
-  display:none;
-}
-
-.services{
-
+.rangeHero{
+  position:relative;
   display:flex;
-
-  gap:7px;
-
-  width:max-content;
+  align-items:stretch;
+  margin-bottom:12px;
+  border-radius:16px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(79,140,255,.22), transparent 70%),
+    radial-gradient(circle at 100% 100%, rgba(34,197,94,.15), transparent 70%),
+    linear-gradient(135deg, rgba(79,140,255,.1), rgba(168,85,247,.08));
+  border:1px solid rgba(79,140,255,.28);
+  box-shadow:
+    0 0 40px rgba(79,140,255,.12),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  overflow:hidden;
 }
 
-.service{
-
-  border-radius:10px;
-
-  padding:7px 10px;
-
-  font-size:11px;
-
-  font-weight:900;
-
-  cursor:pointer;
-
-  white-space:nowrap;
-
-  border:1px solid rgba(255,255,255,.08);
-
-  background:#111827;
+.rangeHero::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 50% 0%, rgba(79,140,255,.18), transparent 65%);
+  pointer-events:none;
 }
 
-.service.hasNumbers{
-
-  background:linear-gradient(
-    135deg,
-    var(--green1),
-    var(--green2)
-  );
+.heroHalf{
+  position:relative;
+  flex:1 1 50%;
+  padding:20px 12px;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
 }
 
-.service.active{
-
-  background:linear-gradient(
-    135deg,
-    var(--blue1),
-    var(--blue2)
-  ) !important;
+.heroHalf.left{
+  border-right:1px solid rgba(255,255,255,.08);
 }
 
-/* INFO */
-
-.info{
-
-  display:grid;
-
-  grid-template-columns:1fr 1fr;
-
-  gap:7px;
-
-  margin-bottom:10px;
-}
-
-.box{
-
-  border:1px solid var(--border);
-
-  border-radius:10px;
-
-  padding:8px;
-}
-
-.label{
-
-  color:var(--muted);
-
+.heroLabel{
   font-size:9px;
+  font-weight:800;
+  letter-spacing:3px;
+  color:rgba(167,179,209,.85);
 }
 
-.value{
-
-  font-size:18px;
-
+.heroRangeValue{
+  font-size:22px;
   font-weight:900;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  background:linear-gradient(135deg,#ffffff,#93c5fd 60%,#a855f7);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  filter:drop-shadow(0 2px 12px rgba(79,140,255,.4));
+  word-break:break-all;
+  line-height:1.2;
 }
 
-/* BUTTON */
+.heroTotalValue{
+  font-size:32px;
+  font-weight:900;
+  letter-spacing:1px;
+  background:linear-gradient(135deg,#4ade80,#22c55e,#16a34a);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  filter:drop-shadow(0 2px 10px rgba(34,197,94,.4));
+  transition:transform .25s ease;
+  line-height:1.1;
+}
+
+.heroTotalValue.bump{
+  transform:scale(1.14);
+}
+
+/* GET BUTTON */
 
 .getBtn{
-
   width:100%;
-
   border:none;
-
-  border-radius:10px;
-
-  padding:11px;
-
+  border-radius:12px;
+  padding:14px;
   font-size:14px;
-
   font-weight:900;
-
+  letter-spacing:.3px;
   cursor:pointer;
-
   color:#fff;
+  margin-bottom:12px;
+  background:linear-gradient(135deg, var(--blue1), var(--blue2));
+  box-shadow:
+    0 6px 24px rgba(79,140,255,.4),
+    inset 0 1px 0 rgba(255,255,255,.2);
+  transition:transform .15s ease, box-shadow .2s ease;
+}
 
-  margin-bottom:8px;
-
-  background:linear-gradient(
-    135deg,
-    var(--blue1),
-    var(--blue2)
-  );
+.getBtn:active{
+  transform:scale(.98);
+  box-shadow:0 3px 14px rgba(79,140,255,.4);
 }
 
 /* LIVE */
 
 .live{
-
   display:grid;
-
-  gap:4px;
+  gap:6px;
 }
 
 .nbox{
-
-  height:34px;
-
+  height:40px;
   border:1px solid var(--border);
-
-  border-radius:8px;
-
-  padding:4px 6px;
-
+  border-radius:10px;
+  padding:5px 8px;
   display:flex;
-
   justify-content:space-between;
-
   align-items:center;
+  background:rgba(255,255,255,.04);
+  backdrop-filter:blur(10px);
+  transition:background .15s ease;
+}
 
-  background:rgba(255,255,255,.03);
+.nbox:hover{
+  background:rgba(255,255,255,.07);
 }
 
 .num{
-
   flex:1;
-
-  font-size:11px;
-
-  font-weight:900;
-
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.3px;
   overflow:hidden;
-
   white-space:nowrap;
-
   text-overflow:ellipsis;
+  color:#e6edff;
 }
 
 .copyBtn{
-
   border:none;
-
-  border-radius:5px;
-
-  padding:3px 7px;
-
-  font-size:9px;
-
+  border-radius:7px;
+  padding:5px 11px;
+  font-size:10px;
   font-weight:900;
-
+  letter-spacing:.5px;
   cursor:pointer;
-
   color:#fff;
+  background:linear-gradient(135deg, var(--green1), var(--green2));
+  box-shadow:0 2px 10px rgba(34,197,94,.35);
+  transition:transform .12s ease;
+}
 
-  background:linear-gradient(
-    135deg,
-    var(--green1),
-    var(--green2)
-  );
+.copyBtn:active{
+  transform:scale(.94);
 }
 
 /* COPY ALL */
 
 .copyAllBtn{
-
   width:100%;
-
   border:none;
-
-  border-radius:10px;
-
-  padding:9px;
-
+  border-radius:12px;
+  padding:12px;
   font-size:12px;
-
   font-weight:900;
-
+  letter-spacing:.4px;
   cursor:pointer;
-
-  margin-top:6px;
-
+  margin-top:10px;
   color:#fff;
+  background:linear-gradient(135deg, var(--purple1), var(--purple2));
+  box-shadow:
+    0 5px 20px rgba(168,85,247,.35),
+    inset 0 1px 0 rgba(255,255,255,.18);
+  transition:transform .15s ease;
+}
 
-  background:linear-gradient(
-    135deg,
-    #7c3aed,
-    #9333ea
-  );
+.copyAllBtn:active{
+  transform:scale(.98);
 }
 
 /* WEBVIEW */
 
 .webviewBox{
-
-  margin-top:12px;
-
+  margin-top:14px;
   width:100%;
-
   height:850px;
-
   border:1px solid var(--border);
-
-  border-radius:12px;
-
+  border-radius:14px;
   overflow:hidden;
+  background:#000;
+  box-shadow:0 8px 30px rgba(0,0,0,.5);
 }
 
 .webviewBox iframe{
-
   width:100%;
-
   height:100%;
-
   border:none;
+  display:block;
 }
 
-/* BIG TOAST */
+/* TOAST */
 
 .toast{
-
   position:fixed;
-
-  top:10px;
-
+  top:12px;
   left:50%;
-
-  transform:translateX(-50%);
-
-  width:96%;
-
-  background:rgba(0,0,0,.92);
-
-  border:1px solid rgba(255,255,255,.15);
-
-  border-radius:12px;
-
-  padding:14px 12px;
-
+  transform:translateX(-50%) translateY(-20px);
+  width:94%;
+  max-width:520px;
+  background:rgba(10,15,35,.96);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(79,140,255,.35);
+  border-radius:14px;
+  padding:16px 14px;
   opacity:0;
-
-  transition:.18s;
-
-  font-weight:900;
-
+  pointer-events:none;
+  transition:opacity .2s ease, transform .25s ease;
+  font-weight:800;
   z-index:999;
-
-  font-size:15px;
-
+  font-size:14px;
   line-height:1.6;
-
   text-align:center;
-
   word-break:break-word;
-
   overflow-wrap:break-word;
+  box-shadow:
+    0 10px 40px rgba(0,0,0,.5),
+    0 0 30px rgba(79,140,255,.2);
 }
 
 .toast.show{
   opacity:1;
+  transform:translateX(-50%) translateY(0);
 }
 
 </style>
@@ -422,564 +354,211 @@ body{
 
 <body>
 
-<div class="toast"
-id="toast"></div>
+<div class="toast" id="toast"></div>
 
 <div class="card">
 
-<div class="top">
+  <div class="top">
+    <div>
+      <div class="title">ANU PANEL</div>
+      <div class="sub">Created By Tamim</div>
+    </div>
+    <div class="badge">🖥️ TAMIM ANU 🇧🇩</div>
+  </div>
 
-<div>
+  <div class="panel">
 
-<div class="title">
-ANU PANEL
-</div>
+    <!-- RANGE HERO (SPLIT BOX) -->
 
-<div class="sub">
-Created By Tamim
-</div>
+    <div class="rangeHero">
 
-</div>
+      <div class="heroHalf left">
+        <div class="heroLabel">ACTIVE RANGE</div>
+        <div class="heroRangeValue">rangeid02</div>
+      </div>
 
-<div class="badge">
-🖥️ TAMIM ANU 🇧🇩
-</div>
+      <div class="heroHalf right">
+        <div class="heroLabel">TOTAL NUMBERS</div>
+        <div class="heroTotalValue" id="rangeTotal">0</div>
+      </div>
 
-</div>
+    </div>
 
-<div class="panel">
+    <!-- GET -->
 
-<!-- SERVICES -->
+    <button class="getBtn" id="getBtn">
+      ╰┈➤ GET NUMBER 💻✌︎㋡
+    </button>
 
-<div class="servicesWrap">
+    <!-- LIVE -->
 
-<div class="services"
-id="services"></div>
+    <div class="live" id="live"></div>
 
-</div>
+    <!-- COPY ALL -->
 
-<!-- INFO -->
+    <button class="copyAllBtn" id="copyAllBtn">
+      📋 COPY ALL + CLEAR
+    </button>
 
-<div class="info">
+    <!-- WEBVIEW -->
 
-<div class="box">
+    <div class="webviewBox">
+      <iframe
+        id="anuFrame"
+        src="https://anu-panel-rgqw.onrender.com/"
+        allow="clipboard-read; clipboard-write">
+      </iframe>
+    </div>
 
-<div class="label">
-RANGE TOTAL NUMBER
-</div>
-
-<div class="value"
-id="rangeTotal">
-0
-</div>
-
-</div>
-
-<div class="box">
-
-<div class="label">
-PANEL TOTAL NUMBER
-</div>
-
-<div class="value"
-id="panelTotal">
-0
-</div>
-
-</div>
-
-</div>
-
-<!-- GET -->
-
-<button class="getBtn"
-id="getBtn">
-
-╰┈➤ GET NUMBER 💻✌︎㋡
-
-</button>
-
-<!-- LIVE -->
-
-<div class="live"
-id="live"></div>
-
-<!-- COPY ALL -->
-
-<button class="copyAllBtn"
-id="copyAllBtn">
-
-📋 COPY ALL + CLEAR
-
-</button>
-
-<!-- WEBVIEW -->
-
-<div class="webviewBox">
-
-<iframe
-id="anuFrame"
-src="https://anu-panel-rgqw.onrender.com/"
-allow="clipboard-read; clipboard-write">
-</iframe>
-
-</div>
-
-</div>
+  </div>
 </div>
 
 <script>
 
 const URL="https://script.google.com/macros/s/AKfycbxs5UnBzGbXDsbX_I027WP7RVdGrKBuKZpYGGPEee3l6lkr670YDne_A-cwdznjFeWMhg/exec";
 
-const SERVICES=[
-
-"rangeid0",
-"rangeid02",
-"rangeid0",
-"rangeid04",
-"rangeid05",
-
-"rangeid06",
-"rangeid07",
-"rangeid08",
-"rangeid09",
-"rangeid10"
-
-];
+const SERVICE="rangeid02";
 
 const WAIT_TIME=60000;
 
 let lastGetTime=0;
 
-const servicesEl=
-document.getElementById("services");
-
-const rangeTotalEl=
-document.getElementById("rangeTotal");
-
-const panelTotalEl=
-document.getElementById("panelTotal");
-
-const liveEl=
-document.getElementById("live");
-
-const toast=
-document.getElementById("toast");
+const rangeTotalEl=document.getElementById("rangeTotal");
+const liveEl=document.getElementById("live");
+const toast=document.getElementById("toast");
 
 let slots=[
-
-{num:"",active:false},
-{num:"",active:false},
-{num:"",active:false}
-
+  {num:"",active:false},
+  {num:"",active:false},
+  {num:"",active:false}
 ];
 
 /* TOAST */
 
 function showToast(t,duration=3000){
-
-toast.textContent=t;
-
-toast.classList.add("show");
-
-clearTimeout(window.toastTimer);
-
-window.toastTimer=setTimeout(()=>{
-
-toast.classList.remove("show");
-
-},duration);
-
+  toast.textContent=t;
+  toast.classList.add("show");
+  clearTimeout(window.toastTimer);
+  window.toastTimer=setTimeout(()=>{
+    toast.classList.remove("show");
+  },duration);
 }
 
 /* IFRAME COPY */
 
 window.addEventListener("message",async(e)=>{
-
-try{
-
-if(e.data.type==="copy"){
-
-await navigator
-.clipboard
-.writeText(
-e.data.text
-);
-
-showToast("Copied");
-
-}
-
-}catch{
-
-showToast("Copy Failed");
-
-}
-
+  try{
+    if(e.data.type==="copy"){
+      await navigator.clipboard.writeText(e.data.text);
+      showToast("Copied");
+    }
+  }catch{
+    showToast("Copy Failed");
+  }
 });
 
-/* SERVICE */
-
-function getService(){
-
-return localStorage
-.getItem("service")
-|| "rangeid01";
-
-}
-
-function setService(v){
-
-localStorage
-.setItem("service",v);
-
-document
-.querySelectorAll(".service")
-.forEach(s=>{
-
-s.classList.remove("active");
-
-});
-
-const btn=document.querySelector(
-
-`[data-service="${v}"]`
-
-);
-
-if(btn){
-
-btn.classList.add("active");
-
-}
-
-}
-
-/* RENDER */
-
-function renderServices(){
-
-servicesEl.innerHTML="";
-
-SERVICES.forEach((s,i)=>{
-
-servicesEl.innerHTML+=`
-
-<div
-class="service"
-data-service="${s}">
-
-Range ${(i+1)
-.toString()
-.padStart(2,"0")}
-
-</div>
-
-`;
-
-});
-
-document
-.querySelectorAll(".service")
-.forEach(btn=>{
-
-btn.onclick=()=>{
-
-setService(
-btn.dataset.service
-);
-
-loadTotals();
-
-updateServiceLights();
-
-};
-
-});
-
-setService(
-getService()
-);
-
-}
-
-/* LIGHT */
-
-async function updateServiceLights(){
-
-SERVICES.forEach(async s=>{
-
-try{
-
-const r=await fetch(
-
-URL+
-"?action=total&service="+s
-
-);
-
-const d=await r.json();
-
-const btn=document.querySelector(
-
-`[data-service="${s}"]`
-
-);
-
-if(!btn) return;
-
-btn.classList.remove(
-"hasNumbers"
-);
-
-if(
-Number(d.total)>0 &&
-s!==getService()
-){
-
-btn.classList.add(
-"hasNumbers"
-);
-
-}
-
-}catch{}
-
-});
-
-}
-
-/* BOX */
+/* BOXES */
 
 function renderBoxes(){
-
-liveEl.innerHTML="";
-
-slots.forEach((slot,index)=>{
-
-liveEl.innerHTML+=`
-
-<div class="nbox">
-
-<div class="num">
-
-${slot.num}
-
-</div>
-
-${slot.active ? `
-
-<button
-class="copyBtn"
-onclick="copySlot(${index})">
-
-COPY
-
-</button>
-
-` : ``}
-
-</div>
-
-`;
-
-});
-
+  liveEl.innerHTML="";
+  slots.forEach((slot,index)=>{
+    liveEl.innerHTML+=`
+      <div class="nbox">
+        <div class="num">${slot.num}</div>
+        ${slot.active ? `
+          <button class="copyBtn" onclick="copySlot(${index})">COPY</button>
+        ` : ``}
+      </div>
+    `;
+  });
 }
 
 /* TOTAL */
 
 async function loadTotals(){
-
-try{
-
-const [r1,r2]=await Promise.all([
-
-fetch(
-URL+
-"?action=total&service="+
-getService()
-),
-
-fetch(
-URL+
-"?action=alltotal"
-)
-
-]);
-
-const d1=await r1.json();
-
-const d2=await r2.json();
-
-rangeTotalEl.textContent=
-d1.total || 0;
-
-panelTotalEl.textContent=
-d2.total || 0;
-
-}catch{}
-
+  try{
+    const r=await fetch(URL+"?action=total&service="+SERVICE);
+    const d=await r.json();
+    rangeTotalEl.textContent=d.total || 0;
+    rangeTotalEl.classList.add("bump");
+    setTimeout(()=>rangeTotalEl.classList.remove("bump"),250);
+  }catch{}
 }
 
 /* GET */
 
 async function getNumbers(){
+  const now=Date.now();
+  if(now-lastGetTime<WAIT_TIME){
+    showToast(
+      "বস, আপনার কী খুব ক্ষুধা পেয়েছে নাকি? 😒 নাম্বার না খেয়ে খাবার খান। মাত্র যে ৩টা নাম্বার নিলেন, সেগুলা কি আত্মহত্যা করেছে? 🤦‍♂️ না মানে যেভাবে নাম্বার খাওয়া শুরু করেছেন, মনে হচ্ছে আমি নাম্বার না… এক প্লেট কাচ্চি বিরিয়ানি! 😬🍗😂",
+      30000
+    );
+    return;
+  }
 
-const now=Date.now();
+  try{
+    const r=await fetch(URL+"?action=get"+"&service="+SERVICE+"&need=3");
+    const d=await r.json();
+    const nums=d.numbers || [];
 
-if(now-lastGetTime<WAIT_TIME){
+    if(nums.length===0){
+      showToast("NO NUMBER FOUND");
+      return;
+    }
 
-showToast(
+    slots=[
+      {num:"",active:false},
+      {num:"",active:false},
+      {num:"",active:false}
+    ];
 
-"বস, আপনার কী খুব ক্ষুধা পেয়েছে নাকি? 😒 নাম্বার না খেয়ে খাবার খান। মাত্র যে ৩টা নাম্বার নিলেন, সেগুলা কি আত্মহত্যা করেছে? 🤦‍♂️ না মানে যেভাবে নাম্বার খাওয়া শুরু করেছেন, মনে হচ্ছে আমি নাম্বার না… এক প্লেট কাচ্চি বিরিয়ানি! 😬🍗😂",
+    nums.slice(0,3).forEach((num,i)=>{
+      slots[i]={num:num,active:true};
+    });
 
-30000
+    lastGetTime=Date.now();
+    renderBoxes();
+    loadTotals();
 
-);
-
-return;
-
+  }catch{
+    showToast("ERROR");
+  }
 }
 
-try{
-
-const r=await fetch(
-
-URL+
-"?action=get"+
-"&service="+
-getService()+
-"&need=3"
-
-);
-
-const d=await r.json();
-
-const nums=d.numbers || [];
-
-if(nums.length===0){
-
-showToast("NO NUMBER FOUND");
-
-return;
-
-}
-
-/* RESET */
-
-slots=[
-
-{num:"",active:false},
-{num:"",active:false},
-{num:"",active:false}
-
-];
-
-/* ADD */
-
-nums.slice(0,3)
-.forEach((num,i)=>{
-
-slots[i]={
-
-num:num,
-active:true
-
-};
-
-});
-
-lastGetTime=Date.now();
-
-renderBoxes();
-
-loadTotals();
-
-updateServiceLights();
-
-}catch{
-
-showToast("ERROR");
-
-}
-
-}
-
-/* COPY */
+/* COPY SLOT */
 
 async function copySlot(i){
-
-await navigator
-.clipboard
-.writeText(
-slots[i].num
-);
-
-slots[i]={
-
-num:"",
-active:false
-
-};
-
-renderBoxes();
-
-showToast("COPIED");
-
+  await navigator.clipboard.writeText(slots[i].num);
+  slots[i]={num:"",active:false};
+  renderBoxes();
+  showToast("COPIED");
 }
 
 /* COPY ALL */
 
-document
-.getElementById("copyAllBtn")
-.onclick=async()=>{
-
-let all=slots
-.filter(s=>s.num)
-.map(s=>s.num)
-.join("\n");
-
-if(!all){
-
-showToast("EMPTY");
-
-return;
-
-}
-
-await navigator
-.clipboard
-.writeText(all);
-
-slots=[
-
-{num:"",active:false},
-{num:"",active:false},
-{num:"",active:false}
-
-];
-
-renderBoxes();
-
-showToast("ALL COPIED & CLEARED");
-
+document.getElementById("copyAllBtn").onclick=async()=>{
+  let all=slots.filter(s=>s.num).map(s=>s.num).join("\n");
+  if(!all){
+    showToast("EMPTY");
+    return;
+  }
+  await navigator.clipboard.writeText(all);
+  slots=[
+    {num:"",active:false},
+    {num:"",active:false},
+    {num:"",active:false}
+  ];
+  renderBoxes();
+  showToast("ALL COPIED & CLEARED");
 };
 
 /* INIT */
 
-document
-.getElementById("getBtn")
-.onclick=getNumbers;
-
-renderServices();
+document.getElementById("getBtn").onclick=getNumbers;
 
 renderBoxes();
-
 loadTotals();
-
-updateServiceLights();
 
 </script>
 
